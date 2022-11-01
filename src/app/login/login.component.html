@@ -1,0 +1,36 @@
+<mat-card class="login-page">
+  <mat-card-title>Login (Template-Driven)</mat-card-title>
+  <mat-card-content>
+
+    <form class="login-form data-form" #loginForm="ngForm" (ngSubmit)="login(loginForm, $event)">
+
+      <mat-form-field>
+
+        <input matInput type="email" name="email" #email="ngModel" ngModel
+          (ngModelChange)="onEmailChanged($event)" [ngModelOptions]="{updateOn: 'blur'}" 
+          placeholder="Email" required email minlength="3" maxlength="20">
+        <mat-error *ngIf="email.errors?.required">The Email is mandatory</mat-error>
+        <mat-error *ngIf="email.errors?.minlength">The Email must have {{ email.errors?.minlength.requiredLength }} minimum size</mat-error>
+        <mat-error *ngIf="email.errors?.email">The Email is not valid</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput type="password" placeholder="Password" name="password"
+          required ngModel #password="ngModel" passwordStrength minlength="8">
+          <mat-error *ngIf="password.errors?.required">The password is mandatory</mat-error>
+      </mat-form-field>
+
+      <ng-container 
+          *ngIf="password.errors | onlyOneError:['minlength','passwordStrength'] as error">
+        <div class="field-message" *ngIf="error.minlength">The password must have {{ error?.minlength.requiredLength }} minimum size</div>
+        <div class="field-message" *ngIf="error.passwordStrength">The password is not strong enough</div>
+      </ng-container>
+
+      <button mat-raised-button color="primary" [disabled]="!loginForm.valid" type="submit">
+        Login
+      </button>
+
+    </form>
+    {{ password.errors | json }}
+  </mat-card-content>
+</mat-card>
